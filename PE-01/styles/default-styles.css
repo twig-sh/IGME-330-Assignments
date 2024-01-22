@@ -1,0 +1,104 @@
+body{
+	font-family: monospace;
+}
+
+#output{
+	font-size: 200%;
+}
+
+#myButton{
+	width: 200px;
+	height: 50pt;
+	font-size: 15pt;
+}
+
+@media only screen and (min-width: 320px){
+	.container{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+	}
+
+	html, body, .container{
+		height 100%
+		margin: 0;
+	}
+
+	h1{
+		font-size: 1.2rem;
+		background-color: #174287;
+		color: #F5F5F5;
+		padding: .8rem;
+		margin: 0;
+		text-align: center;
+		font-family: "Oswald", sans-serif;
+  		font-optical-sizing: auto;
+  		font-weight: 400;
+  		font-style: normal;
+	}
+
+	#output{
+		text-align: center;
+	}
+}
+
+@media only screen and (min-width: 768px){
+	h1{
+		font-size: 3rem;
+		background-color: #23d160;
+	}
+
+	#myButton{
+		width: 300px;
+		height: 75pt;
+		font-size: 1.5rem;
+	}
+
+	body{
+		color: darkgrey;
+		font-size: 2rem;
+	}
+}
+
+@media only screen and (min-width: 1024px){
+	h1{
+		background-color: #ff3860;
+	}
+
+	.container{
+		display: block;
+		margin: 1rem;
+	}
+
+	body{
+		text-align: left;
+		font-size: 1rem;
+	}
+
+	#output{
+		text-align: left;
+	}
+}
+
+@media only screen and (min-width: 1408px){
+	h1{
+		background-color: #088080;
+		font-size: 2.5rem;
+	}
+
+	body{
+		text-align: left;
+		font-size: 1rem;
+		margin: 0;
+	}
+
+	#myButton{
+		width: 16rem;
+		height: 4rem;
+	}
+
+	#output{
+		color: #404040;
+	}
+}
