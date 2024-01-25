@@ -25,39 +25,31 @@
   <script>
     "use strict";
 
-    let a = 10
+    // globally scope the paragraph variable so it can be easily used in both functions
+    let paragraph;
 
-    function addThem(a, b) {
-      return a + b;
-    }
-
-    console.log(addThem(3, 4))
-
-    function doStuff() {
-      // vars are hoisted to the top of the function
-      console.log("log end:", a, i);
-      if (true) {
-        if (true) {
-          for (var i = 0; i < 10; i++) {
-            var a = 10
-          }
-        }
-      }
-    }
-
-
-
-    function greet(greeting) {
-      const paragraph = document.querySelector("#output");
+    const greet = (greeting) => {
+      // get the first and last name from the user input fields, trimming off trailing spaces
       let firstName = document.querySelector("#input-firstname").value.trim();
       let lastName = document.querySelector("#input-lastname").value.trim();
 
+      // use Peter Parker as the default first and last name (no input or input is only spaces)
       if (!firstName) firstName = "Peter";
       if (!lastName) lastName = "Parker";
-      paragraph.innerHTML = `${greeting} ${firstName} ${lastName}`;
+
+      // if the shout checkbox is ticked, have all the text in uppercase
+      if (document.querySelector("#shout").checked) {
+        paragraph.innerHTML = `${greeting} ${firstName} ${lastName}`.toUpperCase();
+      }
+      // otherwise, have it print normally
+      else {
+        paragraph.innerHTML = `${greeting} ${firstName} ${lastName}`;
+      }
+
+
     }
 
-    function sayHello() {
+    /*function sayHello() {
       const paragraph = document.querySelector("#output");
       let firstName = document.querySelector("#input-firstname").value.trim();
       let lastName = document.querySelector("#input-lastname").value.trim();
@@ -65,24 +57,25 @@
       if (!firstName) firstName = "Peter";
       if (!lastName) lastName = "Parker";
       paragraph.innerHTML = `Hello ${firstName} ${lastName}`;
-    }
+    }*/
 
-    function init() {
-      // 1 - get a reference to the button
+    const init = () => {
+      // define the paragraph variable
+      paragraph = document.querySelector("#output");
+      // get a reference to the buttons
       let button1 = document.querySelector("#btn-1");
       let button2 = document.querySelector("#btn-2");
-      // 2 - add a click event to button that calls a `sayHello` function
-      // 3 - create a `sayHello()` function
-      // 3A - get name of person from the <input>
-      // 3B - get a reference to the #output <p>
-      // 3C - update HTML of #output <p>
 
+      // add click event listeners to each button, one for goodbye one for hello
       button1.addEventListener("click", () => { greet("Hello") });
       button2.addEventListener("click", () => { greet("Goodbye") });
+
+      // change the style of the paragraph text
       paragraph.style.color = "red";
       paragraph.style.backgroundColor = "yellow";
     }
 
+    // have init run once the window loads to get the DOM elements properly
     window.onload = init;
 
   </script>
@@ -92,6 +85,7 @@
 <body>
   <button id="btn-1">Click Me!</button>
   <button id="btn-2">Click Me Too!</button>
+  <input type="checkbox" name="shout" id="shout">
   <input id="input-firstname" placeholder="Type in your first name">
   <input id="input-lastname" placeholder="Type in your last name">
   <p id="output">???</p>
