@@ -13,7 +13,7 @@ const babbleLoaded = (e) => {
   const json = JSON.parse(text);
 
   // the two buttons...
-  const button = document.querySelector("#myButton");
+  const button = document.querySelector("#my-button");
   const fiveButton = document.querySelector("#five-babbles");
 
   // ...the first will generate one babble while the other will generate 5
@@ -61,6 +61,6 @@ const generateTechno = (num) => {
   }
 };
 
-window.onload = loadBabble;
+loadBabble();
 
 // init is no longer here since loadBabble and babbleLoaded make it obsolete
