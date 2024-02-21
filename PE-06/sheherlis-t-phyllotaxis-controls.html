@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Sine Start</title>
+	<style>
+		canvas {
+			border: 1px solid black;
+		}
+	</style>
+	<script>
+		"use strict";
+		const canvasWidth = 400, canvasHeight = 300;
+		let ctx;
+		let n = 0
+		const divergence = 137.5;
+		let c = 4;
+		let fps = 60;
+		let dotRadius = 2;
+
+		window.onload = init;
+
+		const restart = () => {
+			n = 0;
+			c = 4;
+			dotRadius = 2;
+			ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+		}
+
+		function init() {
+			ctx = canvas.getContext("2d");
+			canvas.width = canvasWidth;
+			canvas.height = canvasHeight;
+			ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+			document.querySelector("#btn-restart").onclick = restart;
+
+			loop();
+		}
+
+		function loop() {
+			setTimeout(loop, 1000 / fps);
+
+			dotRadius += 0.002
+			c += 0.001
+
+			// each frame draw a new dot
+			// 'a' is the angle
+			// 'r' is the radius from the center of the flower
+			// 'c' is the "padding/spacing" between the dots
+			let a = n * dtr(divergence);
+			let r = c * Math.sqrt(n);
+			console.log(a, r);
+
+			let x = r * Math.cos(a) + canvasWidth / 2;
+			let y = r * Math.sin(a) + canvasHeight / 2;
+
+			let color = "black";
+			let aDegrees;
+
+			switch (document.querySelector("#color-choice").value) {
+				case "option-1":
+					color = `rgb(${n % 256},0,255)`;
+					break;
+				case "option-2":
+					aDegrees = (n * divergence) % 256;
+					color = `rgb(${aDegrees},0,255)`;
+					break;
+				case "option-3":
+					aDegrees = (n * divergence) % 361;
+					color = `hsl(${aDegrees},100%,50%)`;
+					break;
+				case "option-4":
+					color = `hsl(${n / 5 % 361},100%,50%)`;
+					break;
+
+				default:
+					break;
+			}
+
+			drawCircle(ctx, x, y, dotRadius, color);
+
+			n++;
+		}
+
+
+		// helpers
+		function dtr(degrees) {
+			return degrees * (Math.PI / 180);
+		}
+
+		function drawCircle(ctx, x, y, radius, color) {
+			ctx.save();
+			ctx.fillStyle = color;
+			ctx.beginPath();
+			ctx.arc(x, y, radius, 0, Math.PI * 2);
+			ctx.closePath();
+			ctx.fill();
+			ctx.restore();
+		}
+
+	</script>
+</head>
+
+<body>
+	<canvas id="canvas"></canvas>
+
+	<div id="controls">
+		<label>Color Scheme</label>
+		<select id="color-choice">
+			<option value="option-1" selected>Option 1</option>
+			<option value="option-2">Option 2</option>
+			<option value="option-3">Option 3</option>
+			<option value="option-4">Option 4</option>
+		</select>
+		<button id="btn-restart">Restart App</button>
+	</div>
+
+	<div id="description">
+		<p>#2: Has the radius of the dots and the value of c (distance between dots) increase over time.</p>
+		<p>The added control allows the user to switch between the color schemes we explored during class.</p>
+		<p>The reset button resets n to 0, dot size to 2, and c to 4</p>
+
+	</div>
+
+</body>
+
+</html>
