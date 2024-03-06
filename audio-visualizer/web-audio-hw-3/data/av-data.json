@@ -1,0 +1,8 @@
+{
+	"title": "Audio Visualizer",
+	"audio": {
+		"New Adventure Theme": "media/New Adventure Theme.mp3",
+		"Peanuts Theme": "media/Peanuts Theme.mp3",
+		"The Picard Song": "media/The Picard Song.mp3"
+	}
+}

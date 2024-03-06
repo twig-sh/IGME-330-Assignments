@@ -18,7 +18,8 @@ const drawParams = {
 	showInvert: false,
 	showEmboss: false,
 	showFrequency: true,
-	showNoise: 0
+	showNoise: 0,
+	showRotation: false
 };
 
 let fps = 60;
@@ -61,10 +62,12 @@ const setupUI = (canvasElement) => {
 			audio.playCurrentSound();
 			e.target.dataset.playing = "yes"; // our CSS will set the text to "Pause"
 			// if track IS playing, pause it
+			drawParams.showRotation = true;
 		}
 		else {
 			audio.pauseCurrentSound();
 			e.target.dataset.playing = "no"; // our CSS will set the text to "Play"
+			drawParams.showRotation = false;
 		}
 	}
 

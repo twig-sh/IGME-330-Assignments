@@ -13,18 +13,29 @@ let ctx, canvasWidth, canvasHeight, gradient, analyserNode, audioData;
 
 class Sprite {
 	static type = "arc";
-	constructor(x, y, radius = 2, filePath) {
+	constructor(x, y, radius = 2, rotation = 0, scale = 1, filePath) {
 		this.x = x;
 		this.y = y;
 		this.radius = radius;
+		this.rotation = rotation;
+		this.scale = scale;
 		this.filePath = filePath;
-		Object.assign(this, { x, y, radius, filePath });
+
+		this.img = new Image();
+		this.img.src = this.filePath;
 	}
 
-	update() {
+	update(params = {}) {
 		// YOU DO THIS - increase the .x, and .y properties by 1
-		this.x++;
-		this.y++;
+		/* this.x++;
+		this.y++; */
+		if (params.showRotation) {
+			this.rotation += 0.01;
+		}
+		else {
+			this.rotation = 0;
+		}
+
 
 	}
 
@@ -32,15 +43,22 @@ class Sprite {
 		// YOU DO THIS 
 		// fill a circle - utilize the ctx argument, and the .x, .y, .radius and .color properties
 		// don't forget about ctx.save() and ctx.restore()
-		const img = new Image();
-		img.onload = () => {
-			ctx.drawImage(img, this.x, this.y);
-		};
-		img.src = this.filePath;
+		ctx.save();
+		ctx.beginPath();
+		ctx.translate(this.x, this.y);
+		ctx.scale(this.scale, this.scale);
+		ctx.rotate(this.rotation);
+		ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+		ctx.closePath();
+		ctx.fillStyle = "blue";
+		ctx.fill();
+		ctx.drawImage(this.img, -this.img.width / 2, -this.img.height / 2, this.img.width, this.img.height);
+		ctx.restore();
 	}
 }
 
 let sprites = [];
+let visualizerRadius = 300;
 
 const setupCanvas = (canvasElement, analyserNodeRef) => {
 	// create drawing context
@@ -54,7 +72,7 @@ const setupCanvas = (canvasElement, analyserNodeRef) => {
 	// this is the array where the analyser data will be stored
 	audioData = new Uint8Array(analyserNode.fftSize / 2);
 
-	sprites.push(new Sprite(100, 100, 20, "imgs/among-us.png"));
+	sprites.push(new Sprite(canvasWidth / 2, canvasHeight / 2, visualizerRadius, 0, 0.25, "imgs/among-us.png"));
 }
 
 const draw = (params = {}) => {
@@ -67,10 +85,7 @@ const draw = (params = {}) => {
 		analyserNode.getByteTimeDomainData(audioData);
 	}
 
-	for (let i = 0; i < sprites.length; i++) {
-		sprites[i].update();
-		sprites[i].draw(ctx);
-	}
+
 
 	// 2 - draw background
 	ctx.save();
@@ -78,6 +93,13 @@ const draw = (params = {}) => {
 	ctx.globalAlpha = 0.1;
 	ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 	ctx.restore();
+
+	if (params.showCircles) {
+		for (let i = 0; i < sprites.length; i++) {
+			sprites[i].update(params);
+			sprites[i].draw(ctx);
+		}
+	}
 
 	// 3 - draw gradient
 	if (params.showGradient) {
@@ -93,47 +115,34 @@ const draw = (params = {}) => {
 		let barSpacing = 4;
 		let margin = 5;
 		let screenWidthForBars = canvasWidth - (audioData.length * barSpacing) - margin * 2;
-		let barWidth = screenWidthForBars / audioData.length;
+		let barWidth = visualizerRadius / (audioData.length / 2);
 		let barHeight = 200;
 		let topSpacing = 100;
 
+		ctx.fillStyle = "rgba(0,0,0,0.1)"
+		ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
 		ctx.save();
-		ctx.fillStyle = 'rgba(255, 255, 255, 0.50)';
-		ctx.strokeStyle = 'rgba(0, 0, 0, 0.50)';
-		// loop through the data and draw!
-		for (let i = 0; i < audioData.length; i++) {
-			ctx.fillRect(margin + i * (barWidth + barSpacing), topSpacing + 256 - audioData[i], barWidth, barHeight);
-			ctx.strokeRect(margin + i * (barWidth + barSpacing), topSpacing + 256 - audioData[i], barWidth, barHeight);
+		ctx.fillStyle = "red";
+		ctx.translate(ctx.canvas.width / 1.985, ctx.canvas.height / 3.19)
+		for (let b of audioData) {
+			let percent = b / 255;
+			if (percent < 0.02) percent = 0.02;
+			ctx.translate(barWidth, 0);
+			ctx.rotate(Math.PI * 1 / 16);
+			ctx.save();
+			ctx.scale(1, -1);
+			ctx.fillStyle = `rgb(${230 - b}, ${b}, ${b - 128})`;
+			ctx.fillRect(0, 0, barWidth, percent * topSpacing);
+			ctx.restore();
+			ctx.translate(10, 0);
 		}
+
 		ctx.restore();
 	}
 
 	// 5 - draw circles
-	if (params.showCircles) {
-		let maxRadius = canvasHeight / 4;
-		ctx.save();
-		ctx.globalAlpha = 0.5;
-		for (let i = 0; i < audioData.length; i++) {
-			// red-ish circles
-			let percent = audioData[i] / 255;
 
-			let circleRadius = percent * maxRadius;
-			ctx.beginPath();
-			ctx.fillStyle = utils.makeColor(255, 111, 111, 0.34 - percent / 3.0);
-			ctx.arc(canvasWidth / 2, canvasHeight / 2, circleRadius, 0, 2 * Math.PI, false);
-			ctx.fill();
-			ctx.closePath();
-
-			// blue-ish circles, bigger, more transparent
-			ctx.beginPath();
-			ctx.fillStyle = utils.makeColor(0, 0, 255, 0.10 - percent / 10.0);
-			ctx.arc(canvasWidth / 2, canvasHeight / 2, circleRadius * 1.5, 0, 2 * Math.PI, false);
-			ctx.fill();
-			ctx.closePath();
-			ctx.restore();
-		}
-		ctx.restore();
-	}
 
 	// 6 - bitmap manipulation
 	// TODO: right now. we are looping though every pixel of the canvas (320,000 of them!), 
