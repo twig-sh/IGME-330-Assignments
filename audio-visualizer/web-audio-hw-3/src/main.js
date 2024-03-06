@@ -32,7 +32,6 @@ const loop = () => {
 	/* NOTE: This is temporary testing code that we will delete in Part II */
 	setTimeout(loop, 1000 / fps);
 	canvas.draw(drawParams);
-	console.log(drawParams.showFrequency);
 }
 
 const setupUI = (canvasElement) => {

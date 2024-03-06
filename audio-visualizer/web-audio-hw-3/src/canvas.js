@@ -11,6 +11,36 @@ import * as utils from './utils.js';
 
 let ctx, canvasWidth, canvasHeight, gradient, analyserNode, audioData;
 
+class Sprite {
+	static type = "arc";
+	constructor(x, y, radius = 2, filePath) {
+		this.x = x;
+		this.y = y;
+		this.radius = radius;
+		this.filePath = filePath;
+		Object.assign(this, { x, y, radius, filePath });
+	}
+
+	update() {
+		// YOU DO THIS - increase the .x, and .y properties by 1
+		this.x++;
+		this.y++;
+
+	}
+
+	draw(ctx) {
+		// YOU DO THIS 
+		// fill a circle - utilize the ctx argument, and the .x, .y, .radius and .color properties
+		// don't forget about ctx.save() and ctx.restore()
+		const img = new Image();
+		img.onload = () => {
+			ctx.drawImage(img, this.x, this.y);
+		};
+		img.src = this.filePath;
+	}
+}
+
+let sprites = [];
 
 const setupCanvas = (canvasElement, analyserNodeRef) => {
 	// create drawing context
@@ -23,6 +53,8 @@ const setupCanvas = (canvasElement, analyserNodeRef) => {
 	analyserNode = analyserNodeRef;
 	// this is the array where the analyser data will be stored
 	audioData = new Uint8Array(analyserNode.fftSize / 2);
+
+	sprites.push(new Sprite(100, 100, 20, "imgs/among-us.png"));
 }
 
 const draw = (params = {}) => {
@@ -34,8 +66,11 @@ const draw = (params = {}) => {
 	else {
 		analyserNode.getByteTimeDomainData(audioData);
 	}
-	// OR
-	//analyserNode.getByteTimeDomainData(audioData); // waveform data
+
+	for (let i = 0; i < sprites.length; i++) {
+		sprites[i].update();
+		sprites[i].draw(ctx);
+	}
 
 	// 2 - draw background
 	ctx.save();
@@ -146,8 +181,6 @@ const draw = (params = {}) => {
 
 	// D) copy image data back to canvas
 	ctx.putImageData(imageData, 0, 0);
-
-
 }
 
 export { setupCanvas, draw };
