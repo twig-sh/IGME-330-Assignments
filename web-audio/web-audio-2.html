@@ -9,6 +9,19 @@
 			border: 1px solid black;
 			display: block;
 		}
+
+		* {
+			font-family: sans-serif;
+		}
+
+		span {
+			margin-right: 2em;
+		}
+
+		#slider-distortion {
+			position: relative;
+			top: .7em;
+		}
 	</style>
 </head>
 
@@ -17,6 +30,14 @@
 
 	<!-- use obama-oilspill.mp3 or human-voice.mp3 -->
 	<audio controls src="sounds/obama-oilspill.mp3"></audio>
+
+	<p>
+		<span><label for="cb-highshelf">Highshelf Filter (Treble)</label><input type="checkbox"
+				id="cb-highshelf"></span>
+		<span><label for="cb-lowshelf">Lowshelf Filter (Bass)</label><input type="checkbox" id="cb-lowshelf"></span>
+		<span><label for="cb-distortion">Distortion</label><input type="checkbox" id="cb-distortion"></span>
+		<span>0 <input type="range" min="0" max="100" value="0" id="slider-distortion"> 100</span>
+	</p>
 
 	<script>
 		const NUM_SAMPLES = 32;
@@ -31,6 +52,19 @@
 		// https://developer.mozilla.org/en-US/docs/Web/API/AudioContext/createMediaElementSource
 		let sourceNode = audioCtx.createMediaElementSource(audioElement);
 
+		let distortionFilter = audioCtx.createWaveShaper();
+
+		// https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
+		let highshelfBiquadFilter = audioCtx.createBiquadFilter();
+		highshelfBiquadFilter.type = "highshelf";
+
+		let highshelf = false;
+
+		let lowShelfBiquadFilter = audioCtx.createBiquadFilter();
+		lowShelfBiquadFilter.type = "lowshelf";
+
+
+
 		// 4 - create a *analyser node*
 		// https://developer.mozilla.org/en-US/docs/Web/API/AnalyserNode
 		// this gets us real-time frequency and time-domain (i.e. waveform) information
@@ -40,7 +74,9 @@
 		analyserNode.fftSize = NUM_SAMPLES;
 
 		// 6 - hook up the <audio> element to the analyserNode
-		sourceNode.connect(analyserNode);
+		sourceNode.connect(highshelfBiquadFilter);
+		highshelfBiquadFilter.connect(lowShelfBiquadFilter);
+		lowShelfBiquadFilter.connect(analyserNode);
 
 		// 7 - connect to the destination i.e. the speakers
 		analyserNode.connect(audioCtx.destination);
@@ -64,7 +100,10 @@
 		const PADDING = 4;
 		const MIDDLE_Y = ctx.canvas.height / 2;
 
+		let distortionAmount = 20;
+		let lowshelf = false;
 
+		setupUI();
 
 		loop();
 
@@ -81,22 +120,93 @@
 			// 11 - this time, let's visualize the audio data on the canvas
 
 			/* YOU WRITE THIS! */
-			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+			ctx.fillStyle = "rgba(0,0,0,0.1)"
+			ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
 			ctx.save();
 			ctx.fillStyle = "red";
+			ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 4)
 			for (let b of data) {
 				let percent = b / 255;
+				if (percent < 0.02) percent = 0.02;
 				ctx.translate(BAR_WIDTH, 0);
+				ctx.rotate(Math.PI * 1 / 8);
 				ctx.save();
-				ctx.translate(0, MIDDLE_Y);
-				ctx.fillRect(0, 0, BAR_WIDTH, -percent * MAX_BAR_HEIGHT);
+				ctx.scale(1, -1);
+				ctx.fillStyle = `rgb(${230 - b}, ${b}, ${b - 128})`;
+				ctx.fillRect(0, 0, BAR_WIDTH, percent * MAX_BAR_HEIGHT);
 				ctx.restore();
 				ctx.translate(PADDING, 0);
 			}
 
 			ctx.restore();
 
+		}
+
+		function setupUI() {
+			// I. set the initial state of the high shelf checkbox
+			document.querySelector('#cb-highshelf').checked = highshelf; // `highshelf` is a boolean we will declare in a second
+
+			document.querySelector('#cb-lowshelf').checked = lowshelf;
+
+			// II. change the value of `highshelf` every time the high shelf checkbox changes state
+			document.querySelector('#cb-highshelf').onchange = e => {
+				highshelf = e.target.checked;
+				toggleHighshelf(); // turn on or turn off the filter, depending on the value of `highshelf`!
+			};
+
+			document.querySelector('#cb-lowshelf').onchange = e => {
+				lowshelf = e.target.checked;
+				toggleLowshelf(); // turn on or turn off the filter, depending on the value of `highshelf`!
+			};
+
+			// III. 
+			toggleHighshelf(); // when the app starts up, turn on or turn off the filter, depending on the value of `highshelf`!
+
+			toggleLowshelf();
+
+			document.querySelector('#slider-distortion').value = distortionAmount;
+			document.querySelector('#slider-distortion').onchange = e => {
+				distortionAmount = Number(e.target.value);
+				toggleDistortion();
+			};
+		}
+
+		function toggleHighshelf() {
+			if (highshelf) {
+				highshelfBiquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime); // we created the `biquadFilter` (i.e. "treble") node last time
+				highshelfBiquadFilter.gain.setValueAtTime(25, audioCtx.currentTime);
+			} else {
+				highshelfBiquadFilter.gain.setValueAtTime(0, audioCtx.currentTime);
+			}
+		}
+
+		function toggleLowshelf() {
+			if (lowshelf) {
+				lowShelfBiquadFilter.frequency.setValueAtTime(1000, audioCtx.currentTime);
+				lowShelfBiquadFilter.gain.setValueAtTime(15, audioCtx.currentTime);
+			} else {
+				lowShelfBiquadFilter.gain.setValueAtTime(0, audioCtx.currentTime);
+			}
+		}
+
+		function toggleDistortion() {
+			if (distortion) {
+				distortionFilter.curve = null; // being paranoid and trying to trigger garbage collection
+				distortionFilter.curve = makeDistortionCurve(distortionAmount);
+			} else {
+				distortionFilter.curve = null;
+			}
+		}
+
+		// from: https://developer.mozilla.org/en-US/docs/Web/API/WaveShaperNode
+		function makeDistortionCurve(amount = 20) {
+			let n_samples = 256, curve = new Float32Array(n_samples);
+			for (let i = 0; i < n_samples; ++i) {
+				let x = i * 2 / n_samples - 1;
+				curve[i] = (Math.PI + amount) * x / (Math.PI + amount * Math.abs(x));
+			}
+			return curve;
 		}
 
 	</script>
