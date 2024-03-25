@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Canvas Image Preloader Demo</title>
+	<style>
+		canvas{
+			border:1px solid black;
+		}
+	</style>
+</head>
+<body>
+<canvas width="600" height="600"></canvas>
+
+<script>
+	// I. SCRIPT VARIABLES
+	const imageURL = "https://www.rit.edu/marketing/brandportal/images/1505/brand-elements/identity/3-color-white.png";
+	let ctx;
+	let images = [];
+	let rotation = 0;
+	
+	// II. HELPER FUNCTION
+	const preloadImage = (url, callback) => {
+		let img = new Image();
+		
+		img.onload = () => {
+		  // when the image shows up, add to array and call `init()`
+		  images.push(img);
+		  callback();
+		};
+	
+		img.onerror = () => {
+		  console.log(`Image at url "${url}" wouldn't load! Check your URL!`);
+		};
+	
+		// start downloading the image (it is located on an RIT server)
+	  img.src = url;
+	};
+	
+	// III. MAIN CODE
+	const loop = () => {
+		setTimeout(loop,1/60);
+		ctx.fillStyle = "yellow";
+		ctx.fillRect(0,0,600,600);
+	
+		ctx.save();
+		ctx.translate(300,300);
+		//ctx.scale(Math.sin(rotation % Math.PI * 2)+1, Math.sin(rotation % Math.PI * 2)+1)
+		ctx.rotate(rotation);
+		//ctx.drawImage(image, dx, dy, dWidth, dHeight); 
+		// draw "from center"
+		ctx.drawImage(images[0],-120,-120,240,240);
+		ctx.restore();
+		
+		rotation += .01;
+		//debugger; // to see that the preloader works - uncomment this line and comment out setTimeout(loop,1/60);
+	};
+	
+	const init = (img) => {
+		ctx = document.querySelector("canvas").getContext("2d");
+		loop();
+	};
+	
+	// load the image, then call init
+	preloadImage(imageURL,init); 	
+
+
+	
+</script>
+</body>
+</html>

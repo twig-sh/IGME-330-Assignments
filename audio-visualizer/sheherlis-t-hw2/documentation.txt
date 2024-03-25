@@ -1,0 +1,7 @@
+II. - I added lowshelf and highshelf audio effect nodes, the intensity of both being controlled by sliders.
+
+III. - My Sprite class is called Spinner. The appearance is an image (which is determined by a parameter), as well as a circle behind it. When the audio is playing, the images will spin.
+
+IV. - My av-data contains the title of the app, the song titles and their paths, and the instructions for the app.
+
+V. - I replaced the pulsing circles with the spinner in the middle, had the bars wrap around the center spinner, and made it so that when the bars are visible the gradient in the background becomes dimmer to increase focus on the foreground. I personally believe this is worth 15%, as the backend work and research required for the images in specific allow for a lot of expandability and expansion.

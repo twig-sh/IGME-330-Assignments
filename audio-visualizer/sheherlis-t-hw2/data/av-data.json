@@ -1,0 +1,22 @@
+{
+	"title": "Audio Visualizer",
+	"audio": [
+		{
+			"title": "New Adventure Theme",
+			"path": "media/New Adventure Theme.mp3"
+		},
+		{
+			"title": "Peanuts Theme",
+			"path": "media/Peanuts Theme.mp3"
+		},
+		{
+			"title": "The Picard Song",
+			"path": "media/The Picard Song.mp3"
+		},
+		{
+			"title": "Among Us Drip",
+			"path": "media/Among Us Drip.mp3"
+		}
+	],
+	"information": "This app will visualize the audio track the user selects. First, pick the track you want from the drop down menu. When you hit play, the audio will play and be visualized. The volume slider affects how loud the music is. The checkboxes below the slider affect the visuals. The noise slider adds visual noise and has no effect on the music itself. The filters amplify the treble or bass in the music. Finally, you can choose between if you want to see the frequency or waveform data of the music. Happy visualizing!"
+}
