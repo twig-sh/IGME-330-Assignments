@@ -1,3 +1,5 @@
+import './App.css'
+
 let container = document.querySelector(".container");
 let cards = document.querySelectorAll(".result");
 let cardFront = document.querySelectorAll(".front");
@@ -5,9 +7,7 @@ let cardBack = document.querySelectorAll(".back");
 let cardImgs = document.querySelectorAll(".card-img");
 let cardNames = document.querySelectorAll(".name");
 let buttons = document.querySelectorAll(".main-button");
-let fish = document.querySelector("#fish");
 let fishDropDown = document.querySelector("#fish-list");
-let bugs = document.querySelector("#bugs");
 let bugsDropDown = document.querySelector("#bugs-list");
 let villagersDropDown = document.querySelector("#villagers-list");
 let favoritesDropDown = document.querySelector("#favorites-list");
@@ -86,7 +86,7 @@ let dataLoaded = (e) => {
 };
 
 // no data found (this should theoretically never be called)
-let dataError = (e) => {
+let dataError = () => {
   console.log("An error occured");
 };
 
@@ -326,3 +326,9 @@ let clearFavorites = (e) => {
 buttons.forEach((button) => {
   button.addEventListener("click", buttonPress);
 });
+
+
+function App() {
+}
+
+export default App
