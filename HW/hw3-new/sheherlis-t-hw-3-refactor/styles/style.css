@@ -14,6 +14,7 @@
   }
   
   h1 {
+	text-align: center;
 	color: var(--white);
 	-webkit-text-stroke: 1px var(--green);
 	font-size: 4rem;
