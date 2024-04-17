@@ -129,7 +129,7 @@ const displayBugOrFish = (array) => {
                             <img class='card-img' data-type='critter' src=${result.image_url} />
                             <p class='name' data-type='critter'>${result.name}</p>
                         </div>
-                        <div class='back'>
+                        <div class='back' data-type='critter'>
                             <p>${result.name}</p>
                             <p>Months Available: ${result.north.months}</p>
                             <p>Location: ${result.location}</p>
@@ -226,6 +226,7 @@ const favoriteClick = (e) => {
 			favoriteCrittersArray.push(newData);
 			localStorage.setItem(critterKey, JSON.stringify(favoriteCrittersArray));
 		}
+
 	}
 };
 
@@ -281,7 +282,7 @@ const loadFavorites = (value) => {
 
 			container.insertAdjacentHTML(
 				"afterend",
-				`<button id='clear' value=${value}>Clear</button>`
+				`<button class='button is-warning has-text-black is-rounded' id='clear' value=${value}>Clear</button>`
 			);
 			clearButton = document.querySelector("#clear");
 			clearButton.onclick = clearFavorites;
@@ -302,7 +303,7 @@ const loadFavorites = (value) => {
 
 			container.insertAdjacentHTML(
 				"afterend",
-				`<button id='clear' value=${value}>Clear</button>`
+				`<button class='button is-warning has-text-black is-rounded'id='clear' value=${value}>Clear</button>`
 			);
 			clearButton = document.querySelector("#clear");
 			clearButton.onclick = clearFavorites;

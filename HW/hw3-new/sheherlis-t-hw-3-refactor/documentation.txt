@@ -1,0 +1,1 @@
+For this homework I used TypeScript to ensure that all my variables were strongly typed, going through the rest of the code to ensure that it was compatible.

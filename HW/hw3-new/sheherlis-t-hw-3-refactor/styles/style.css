@@ -13,23 +13,6 @@
 	font-family: 'Varela Round', sans-serif;
   }
   
-  h1 {
-	text-align: center;
-	color: var(--white);
-	-webkit-text-stroke: 1px var(--green);
-	font-size: 4rem;
-	background-color: #46c1b7b7;
-	width: fit-content;
-	border-radius: 10px;
-	margin: 0 auto;
-  }
-  
-  .container {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
-  }
-  
   .result {
 	width: 20%;
 	height: 15rem;
@@ -81,8 +64,7 @@
   }
   
   .back p {
-	margin-left: 10px;
-	margin-right: 10px;
+	margin: 15px;
   }
   
   .front, .back, .card-img, .name {
@@ -94,14 +76,6 @@
   
   .result-card:hover {
 	transform: rotateY(180deg)
-  }
-  
-  p {
-	text-align: center;
-  }
-  
-  #buttons {
-	height: 2rem;
   }
   
   #clear {
@@ -116,29 +90,6 @@
 	margin: auto;
 	margin-top: 20px;
 	border-radius: 12px;
-  }
-  
-  ul {
-	list-style: none;
-	display: flex;
-	justify-content: space-around;
-  }
-  
-  button{
-	color: var(--green);
-	width: 6rem;
-	height: 2rem;
-	background-color: var(--yellow);
-	border: 1px solid var(--green);
-	border-radius: 20px;
-	font-size: 1.1rem;
-	box-shadow: 1px 1px #0D1B1E;
-  }
-  
-  button:active {
-	background-color: var(--brown);
-	color: var(--white);
-	box-shadow: inset 1px 1px #0D1B1E;
   }
   
   select {

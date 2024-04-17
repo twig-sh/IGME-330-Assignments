@@ -45,11 +45,11 @@
     </div>
   </nav>
 
-  <h1 class="is-centered">Animal Crossing Glossary!</h1>
+  <h1 class="title is-size-1 has-text-centered has-background-primary">Animal Crossing Glossary!</h1>
   <div id="buttons">
-    <ul>
+    <ul class="is-flex is-justify-content-space-around">
       <li>
-        <button class="main-button" id="fish" value="fish">Fish</button>
+        <button class="main-button button is-warning has-text-black is-rounded" id="fish" value="fish">Fish</button>
 
         <select name="fish" id="fish-list">
           <option value="">All</option>
@@ -60,7 +60,7 @@
         </select>
       </li>
       <li>
-        <button class="main-button" id="bugs" value="bugs">Bugs</button>
+        <button class="main-button button is-warning has-text-black is-rounded" id="bugs" value="bugs">Bugs</button>
 
         <select name="bugs" id="bugs-list">
           <option value="">All</option>
@@ -72,7 +72,8 @@
         </select>
       </li>
       <li>
-        <button class="main-button" id="villagers" value="villagers">Villagers</button>
+        <button class="main-button button is-warning has-text-black is-rounded" id="villagers"
+          value="villagers">Villagers</button>
 
         <select name="villagers" id="villagers-list">
           <option value="">All</option>
@@ -115,7 +116,8 @@
 
 
       <li>
-        <button class="main-button" id="favorites" value="favorites">Favorites</button>
+        <button class="main-button button is-warning has-text-black is-rounded" id="favorites"
+          value="favorites">Favorites</button>
 
         <select name="favorites" id="favorites-list">
           <option value="critters">Critters</option>
@@ -125,9 +127,9 @@
     </ul>
   </div>
 
-  <p id="instructions">Click a button to load items!</p>
+  <p class="has-text-centered" id="instructions">Click a button to load items!</p>
 
-  <div class="container"></div>
+  <div class="container is-flex is-flex-wrap-wrap is-justify-content-space-between"></div>
   <script src="./dist/bundle.js"></script>
 </body>
 
