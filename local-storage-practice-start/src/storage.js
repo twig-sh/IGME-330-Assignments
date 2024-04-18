@@ -1,6 +1,6 @@
 // a private (to this module) unique name to store the app data under
 // if you put this on banjo, change `abc1234` to your banjo account name
-const storeName = "abc1234-list-app";
+const storeName = "cks2693-list-app";
 
 // a private (to this module) helper function
 // it will load in a string from localStorage and convert it to a JSON object
@@ -9,10 +9,10 @@ const storeName = "abc1234-list-app";
 const loadJSONFromLocalStorage = () => {
   const string = localStorage.getItem(storeName);
   let json;
-  try{
+  try {
     json = JSON.parse(string);
-    if(!json) throw new Error("json is null!");
-  }catch(error){
+    if (!json) throw new Error("json is null!");
+  } catch (error) {
     console.log(`ERROR: ${error} with string: ${string}`);
     json = {};
   }
